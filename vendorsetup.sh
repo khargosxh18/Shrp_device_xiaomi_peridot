@@ -17,62 +17,128 @@
 #
 # 	Please maintain this if you use this script or any part of it
 #
+#!/bin/sh
+#
+# SHRP 14.1 vendorsetup.sh for Xiaomi Peridot
+# Auto-exports environment variables for build
+#
 
-#set -o xtrace
 FDEVICE="peridot"
 
-fox_get_target_device() {
+shrp_get_target_device() {
 	export script_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 	if echo "$script_path" | grep -q "$FDEVICE"; then
-		FOX_BUILD_DEVICE="$FDEVICE"
+		SHRP_BUILD_DEVICE="$FDEVICE"
 	elif echo "$0" | grep -q "$FDEVICE"; then
-		FOX_BUILD_DEVICE="$FDEVICE"
+		SHRP_BUILD_DEVICE="$FDEVICE"
 	fi
 }
 
-if [ -z "$FOX_BUILD_DEVICE" ]; then
-	fox_get_target_device
+if [ -z "$SHRP_BUILD_DEVICE" ]; then
+	shrp_get_target_device
 fi
 
-if [ "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
-	echo "Detected build device: $FOX_BUILD_DEVICE"
+if [ "$SHRP_BUILD_DEVICE" = "$FDEVICE" ]; then
+	echo "Detected SHRP build device: $SHRP_BUILD_DEVICE"
 
-# Review build flags with below links:
-# https://gitlab.com/OrangeFox/vendor/recovery/-/raw/fox_14.1/orangefox_build_vars.txt
-# https://gitlab.com/OrangeFox/bootable/Recovery/-/raw/fox_14.1/orangefox.mk
+	# -------------------------------
+	# Mandatory SHRP flags
+	# -------------------------------
+	export SHRP_DEVICE_CODE=peridot
+	export SHRP_PATH=device/xiaomi/peridot
+	export SHRP_MAINTAINER=@khargosxh18
+	export SHRP_REC_TYPE=Normal
+	export SHRP_DEVICE_TYPE=A/B
+	export SHRP_REC=/dev/block/bootdevice/by-name/recovery
+	export SHRP_HAS_RECOVERY_PARTITION=true
+	export SHRP_AB=true
 
-	# A/B Partition
-	export FOX_VIRTUAL_AB_DEVICE=1
-	export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"
-	export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
+	# -------------------------------
+	# Storage
+	# -------------------------------
+	export SHRP_INTERNAL=/sdcard
+	export SHRP_EXTERNAL=/external_sd
+	export SHRP_OTG=/usb_otg
 
-	# Compression Binaries & Tools
-	export FOX_USE_BASH_SHELL=1
-	export FOX_USE_NANO_EDITOR=1
-	export FOX_USE_TAR_BINARY=1
-	export FOX_USE_LZ4_BINARY=1
-	export FOX_USE_SED_BINARY=1
-	export FOX_USE_XZ_UTILS=1
-	export FOX_USE_ZSTD_BINARY=1
-	export FOX_DELETE_AROMAFM=1
-	export FOX_REMOVE_AAPT=1
-	export FOX_USE_BUSYBOX_BINARY=1
-	export FOX_USE_GREP_BINARY=1
+	# -------------------------------
+	# Flashlight
+	# -------------------------------
+	export SHRP_FLASH=1
+	export SHRP_CUSTOM_FLASHLIGHT=false
 
-	# KernelSU / Magisk Support
-	# export FOX_DELETE_MAGISK_ADDON=1
-	export FOX_USE_SPECIFIC_MAGISK_ZIP="$script_path/prebuilt/Magisk-v30.6.zip"
-	export FOX_MOVE_MAGISK_INSTALLER_TO_RAMDISK=1
-	export FOX_ENABLE_KERNELSU_SUPPORT=1
-	export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=1
-	export FOX_ENABLE_SUKISU_SUPPORT=1
+	# -------------------------------
+	# Optional & Express
+	# -------------------------------
+	export SHRP_EXPRESS=true
+	export SHRP_EXPRESS_USE_DATA=true
+	export SHRP_DARK=true
+	export SHRP_NO_SAR_AUTOMOUNT=false
+	export SHRP_LITE=false
 
-	# Fox Settings
-	export FOX_VARIANT="crypto"
-	export FOX_SETTINGS_ROOT_DIRECTORY="/persist"
-	export FOX_MAINTAINER_PATCH_VERSION="$(date -d "+40 minutes" +%Y%m%d%H%M)"
-	export FOX_ALLOW_EARLY_SETTINGS_LOAD=1
-	export FOX_RESET_SETTINGS="disabled"
+	# -------------------------------
+	# Default Addons
+	# -------------------------------
+	export SHRP_SKIP_DEFAULT_ADDON_1=true
+	export INC_IN_REC_ADDON_1=false
+	export SHRP_SKIP_DEFAULT_ADDON_2=false
+	export INC_IN_REC_ADDON_2=true
+	export SHRP_SKIP_DEFAULT_ADDON_3=false
+	export INC_IN_REC_ADDON_3=true
+	export SHRP_SKIP_DEFAULT_ADDON_4=false
+	export INC_IN_REC_ADDON_4=true
+	export INC_IN_REC_MAGISK=true
+	export SHRP_EXCLUDE_MAGISK_FLASH=false
+
+	# -------------------------------
+	# Custom Addons
+	# -------------------------------
+	export SHRP_EXTERNAL_ADDON_PATH=device/xiaomi/$SHRP_DEVICE_CODE/addon/
+	export SHRP_EXTERNAL_ADDON_1_NAME='LOS Recorder'
+	export SHRP_EXTERNAL_ADDON_1_INFO='A magisk module which adds LineageOS recorder into your system'
+	export SHRP_EXTERNAL_ADDON_1_FILENAME=los_recorder.zip
+	export SHRP_EXTERNAL_ADDON_1_BTN_TEXT=Install
+	export SHRP_EXTERNAL_ADDON_1_SUCCESSFUL_TEXT=Installed
+	export SHRP_INC_IN_REC_EXTERNAL_ADDON_1=true
+
+	# -------------------------------
+	# Compression & Ramdisk
+	# -------------------------------
+	export BOARD_RAMDISK_USE_LZ4=true
+	export OF_USE_LZ4_COMPRESSION=1
+	export OF_USE_LZMA_COMPRESSION=0
+
+	# -------------------------------
+	# Magiskboot / patching
+	# -------------------------------
+	export OF_USE_MAGISKBOOT=1
+	export OF_USE_MAGISKBOOT_FOR_ALL_PATCHES=1
+
+	# -------------------------------
+	# Crypto / Decryption
+	# -------------------------------
+	export FIXED_DECRYPT=false
+	export TW_INCLUDE_CRYPTO=$FIXED_DECRYPT
+	export TW_INCLUDE_CRYPTO_FBE=$FIXED_DECRYPT
+	export TW_INCLUDE_FBE_METADATA_DECRYPT=$FIXED_DECRYPT
+	export BOARD_USES_QCOM_FBE_DECRYPTION=$FIXED_DECRYPT
+	export TW_USE_FSCRYPT_POLICY=2
+	export OF_KEEP_DM_VERITY=1
+	export OF_KEEP_FORCED_ENCRYPTION=1
+	export OF_KEEP_DM_VERITY_FORCED_ENCRYPTION=1
+	export OF_SKIP_FBE_DECRYPTION=0
+
+	# -------------------------------
+	# A/B options
+	# -------------------------------
+	export FOX_AB_DEVICE=1
+	export OF_AB_DEVICE_WITH_RECOVERY_PARTITION=1
+	export OF_RECOVERY_AB_FULL_REFLASH_RAMDISK=0
+
+	# -------------------------------
+	# Maintainer / Build version
+	# -------------------------------
+	export FOX_MAINTAINER_PATCH_VERSION=01
+
 else
-	echo "I: vendorsetup.sh skipped; device mismatch or environment issue."
+	echo "I: SHRP vendorsetup.sh skipped; device mismatch or environment issue."
 fi
