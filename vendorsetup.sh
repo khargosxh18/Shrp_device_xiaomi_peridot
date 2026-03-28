@@ -76,31 +76,6 @@ if [ "$SHRP_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export SHRP_LITE=false
 
 	# -------------------------------
-	# Default Addons
-	# -------------------------------
-	export SHRP_SKIP_DEFAULT_ADDON_1=true
-	export INC_IN_REC_ADDON_1=false
-	export SHRP_SKIP_DEFAULT_ADDON_2=false
-	export INC_IN_REC_ADDON_2=true
-	export SHRP_SKIP_DEFAULT_ADDON_3=false
-	export INC_IN_REC_ADDON_3=true
-	export SHRP_SKIP_DEFAULT_ADDON_4=false
-	export INC_IN_REC_ADDON_4=true
-	export INC_IN_REC_MAGISK=true
-	export SHRP_EXCLUDE_MAGISK_FLASH=false
-
-	# -------------------------------
-	# Custom Addons
-	# -------------------------------
-	export SHRP_EXTERNAL_ADDON_PATH=device/xiaomi/$SHRP_DEVICE_CODE/addon/
-	export SHRP_EXTERNAL_ADDON_1_NAME='LOS Recorder'
-	export SHRP_EXTERNAL_ADDON_1_INFO='A magisk module which adds LineageOS recorder into your system'
-	export SHRP_EXTERNAL_ADDON_1_FILENAME=los_recorder.zip
-	export SHRP_EXTERNAL_ADDON_1_BTN_TEXT=Install
-	export SHRP_EXTERNAL_ADDON_1_SUCCESSFUL_TEXT=Installed
-	export SHRP_INC_IN_REC_EXTERNAL_ADDON_1=true
-
-	# -------------------------------
 	# Compression & Ramdisk
 	# -------------------------------
 	export BOARD_RAMDISK_USE_LZ4=true
