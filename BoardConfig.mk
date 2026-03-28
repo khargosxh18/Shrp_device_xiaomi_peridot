@@ -39,18 +39,6 @@ SHRP_CUSTOM_FLASHLIGHT := false
 SHRP_NO_SAR_AUTOMOUNT := false
 SHRP_LITE := false
 
-# Default Addons
-SHRP_SKIP_DEFAULT_ADDON_1 := true
-INC_IN_REC_ADDON_1 := false
-SHRP_SKIP_DEFAULT_ADDON_2 := false
-INC_IN_REC_ADDON_2 := true
-SHRP_SKIP_DEFAULT_ADDON_3 := false
-INC_IN_REC_ADDON_3 := true
-SHRP_SKIP_DEFAULT_ADDON_4 := false
-INC_IN_REC_ADDON_4 := true
-INC_IN_REC_MAGISK := true
-SHRP_EXCLUDE_MAGISK_FLASH := false
-
 ###################
 # Architecture
 ###################
